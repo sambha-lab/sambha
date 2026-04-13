@@ -72,7 +72,6 @@ services:
     environment:
       NODE_ENV: development
       NEXT_PUBLIC_API_URL: http://localhost:3001
-      NEXT_PUBLIC_STARKNET_NETWORK: goerli
     volumes:
       - ./apps/web:/app/apps/web
       - ./packages:/app/packages
@@ -105,29 +104,6 @@ services:
     networks:
       - sambha-network
     command: pnpm dev
-
-  # StarkNet Node (for local development)
-  starknet-devnet:
-    image: shardlabs/starknet-devnet-rs:latest
-    container_name: sambha-starknet-devnet
-    restart: unless-stopped
-    ports:
-      - "5050:5050"
-    command:
-      [
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "5050",
-        "--seed",
-        "0",
-        "--accounts",
-        "10",
-        "--initial-balance",
-        "1000000000000000000000",
-      ]
-    networks:
-      - sambha-network
 
 volumes:
   mongodb_data:

@@ -1,7 +1,7 @@
 {
   "name": "sambha",
   "private": true,
-  "description": "Sambha - Blockchain-enhanced event management platform",
+  "description": "Sambha - event management platform",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
@@ -18,14 +18,14 @@
     "dev:web": "pnpm --filter web dev",
     "dev:mobile": "pnpm --filter mobile dev",
     "dev:landing": "pnpm --filter landing dev",
-    "build:contracts": "pnpm --filter contracts build",
-    "test:contracts": "pnpm --filter contracts test",
+    "build:contracts": "stellar contract build --manifest-path contracts/contracts/sambha_core/Cargo.toml",
+    "test:contracts": "cargo test --manifest-path contracts/Cargo.toml",
     "setup": "./scripts/setup-dev.sh",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
-    "contracts:deploy": "pnpm --filter contracts deploy",
-    "contracts:verify": "pnpm --filter contracts verify",
+    "contracts:deploy": "echo 'Use the Stellar CLI to deploy a compiled Soroban contract.'",
+    "contracts:verify": "echo 'Use stellar contract info or invoke against the deployed contract as needed.'",
     "validate": "pnpm --recursive exec -- pnpm -v && turbo run lint type-check"
   },
   "devDependencies": {
@@ -54,11 +54,10 @@
     "url": "https://github.com/sambha-team/sambha.git"
   },
   "keywords": [
-    "blockchain",
     "event-management",
-    "starknet",
-    "nft",
-    "web3"
+    "payments",
+    "contracts",
+    "stellar"
   ],
   "license": "MIT",
   "workspaces": [

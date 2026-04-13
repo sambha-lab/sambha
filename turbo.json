@@ -16,8 +16,8 @@
     },
     "build:contracts": {
       "dependsOn": ["^build:contracts"],
-      "inputs": ["src/**/*.cairo", "Scarb.toml", "Scarb.lock"],
-      "outputs": ["target/**"]
+      "inputs": ["contracts/**/*.rs", "contracts/**/Cargo.toml", "contracts/Cargo.lock"],
+      "outputs": ["target/**", "contracts/target/**"]
     },
     "dev": {
       "cache": false,
@@ -26,24 +26,24 @@
     },
     "test": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", "src/**/*.cairo", "tests/**"],
+      "inputs": ["$TURBO_DEFAULT$", "contracts/**/*.rs", "contracts/**/Cargo.toml", "tests/**"],
       "outputs": ["coverage/**"]
     },
     "test:contracts": {
       "dependsOn": ["build:contracts"],
-      "inputs": ["src/**/*.cairo", "tests/**/*.cairo", "Scarb.toml"],
-      "outputs": ["target/**"]
+      "inputs": ["contracts/**/*.rs", "contracts/**/Cargo.toml", "contracts/Cargo.lock"],
+      "outputs": ["target/**", "contracts/target/**"]
     },
     "lint": {
       "dependsOn": ["^lint"],
-      "inputs": ["$TURBO_DEFAULT$", "src/**/*.cairo"]
+      "inputs": ["$TURBO_DEFAULT$", "contracts/**/*.rs"]
     },
     "type-check": {
       "dependsOn": ["^type-check"],
-      "inputs": ["$TURBO_DEFAULT$", "src/**/*.cairo"]
+      "inputs": ["$TURBO_DEFAULT$", "contracts/**/*.rs"]
     },
     "format": {
-      "inputs": ["$TURBO_DEFAULT$", "src/**/*.cairo"]
+      "inputs": ["$TURBO_DEFAULT$", "contracts/**/*.rs"]
     },
     "clean": {
       "cache": false
