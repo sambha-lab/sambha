@@ -38,26 +38,21 @@ jobs:
   #     - name: Checkout
   #       uses: actions/checkout@v4
 
-  #     - name: Setup Scarb
-  #       uses: software-mansion/setup-scarb@v1
-  #       with:
-  #         scarb-version: "2.6.4"
+  #     - name: Setup Rust
+  #       uses: dtolnay/rust-toolchain@stable
 
-  #     - name: Setup Starknet Foundry
-  #       uses: foundry-rs/setup-snfoundry@v3
+  #     - name: Setup Stellar CLI
+  #       run: cargo install --locked stellar-cli || cargo install stellar-cli
 
   #     - name: Build contracts
-  #       working-directory: apps/contracts
-  #       run: scarb build
+  #       run: pnpm run build:contracts
 
-  #     - name: Deploy to StarkNet
-  #       working-directory: apps/contracts
+  #     - name: Deploy contract
   #       env:
-  #         STARKNET_PRIVATE_KEY: ${{ secrets.STARKNET_PRIVATE_KEY }}
-  #         STARKNET_RPC_URL: ${{ secrets.STARKNET_RPC_URL }}
+  #         STELLAR_SECRET_KEY: ${{ secrets.STELLAR_SECRET_KEY }}
+  #         STELLAR_RPC_URL: ${{ secrets.STELLAR_RPC_URL }}
   #       run: |
-  #         # Deploy contracts using Starknet Foundry
-  #         echo "Deploying contracts to StarkNet..."
+  #         echo "Deploying contract..."
   #         # TODO: Add deployment script here
 
   # deploy-backend:
