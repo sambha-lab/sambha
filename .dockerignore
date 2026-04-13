@@ -1,0 +1,15 @@
+node_modules
+.git
+.husky
+dist
+.vscode
+artifacts
+.gemini
+**/node_modules
+**/dist
+**/.env
+**/.env.*
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+.DS_Store
