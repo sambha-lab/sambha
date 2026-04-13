@@ -1,17 +1,20 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Stage 1: Build stage
+FROM node:22-alpine AS builder
 
-# Install pnpm
-RUN npm install -g pnpm
+# Enable Corepack for pnpm
+RUN corepack enable
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/backend/package.json ./apps/backend/
+# Copy workspace configuration and lockfile
+COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
-# Install dependencies
+# Copy all package.jsons to leverage pnpm's clever installation
+COPY apps/backend/package.json ./apps/backend/
+COPY packages ./packages/
+
+# Install all dependencies (including devDeps for building)
 RUN pnpm install --frozen-lockfile
 
 # Copy source code
@@ -22,30 +25,41 @@ COPY packages ./packages
 WORKDIR /app/apps/backend
 RUN pnpm build
 
-# Production stage
-FROM node:20-alpine AS production
+# Stage 2: Prune dependencies for production
+# This stage creates a minimal set of production dependencies
+WORKDIR /app
+RUN pnpm --filter backend --prod deploy /prod-app
 
-# Install pnpm
-RUN npm install -g pnpm
+# Stage 3: Final Production Image
+FROM node:22-alpine AS production
+
+# Install tini for proper signal handling
+RUN apk add --no-cache tini
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-COPY apps/backend/package.json ./apps/backend/
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Install only production dependencies
-RUN pnpm install --frozen-lockfile --prod
+# Use a non-root user for security
+RUN adduser --system --uid 1001 node-service
+USER node-service
 
-# Copy built application
-COPY --from=builder /app/apps/backend/dist ./apps/backend/dist
+# Copy only the necessary files from the build process
+# pnpm deploy handled the node_modules and package.json
+COPY --from=builder /prod-app/node_modules ./node_modules
+COPY --from=builder /prod-app/package.json ./package.json
 
-# Change to backend directory
-WORKDIR /app/apps/backend
+# Copy the compiled distribution from the builder
+COPY --from=builder /app/apps/backend/dist ./dist
 
-# Expose port
-EXPOSE 3001
+# Expose the application port
+EXPOSE 3000
 
-# Start the application
-CMD ["pnpm", "start"] 
+# Use tini to manage the Node process
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start the application using node directly (cleaner than pnpm start)
+CMD ["node", "dist/index.js"]
