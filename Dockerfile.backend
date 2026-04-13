@@ -7,6 +7,9 @@ RUN corepack enable
 # Set working directory
 WORKDIR /app
 
+# Diagnostic: Check what files are available in the context
+# RUN ls -R .
+
 # Copy workspace configuration and lockfile
 COPY pnpm-lock.yaml pnpm-workspace.yaml package.json ./
 
