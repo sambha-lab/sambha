@@ -54,7 +54,7 @@ export type SidebarProviderProps = {
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const role: string = "event-planner"; // or get from your auth logic
+  const role: string = "guest"; // or get from your auth logic
 
   let sidebarItems: { icon: ReactNode; label: string; url: string }[] = [];
   if (role === "event-planner") {
@@ -71,7 +71,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <SambhaSidebar sidebarItems={sidebarItems} />
         <main className="flex-1 relative w-full overflow-auto no-scrollbar">
           <div className="absolute -top-1 right-0 w-max flex items-center">
-            <SidebarTrigger >{children}</SidebarTrigger>
+            <SidebarTrigger>{children}</SidebarTrigger>
           </div>
 
           <MainContent>{children}</MainContent>

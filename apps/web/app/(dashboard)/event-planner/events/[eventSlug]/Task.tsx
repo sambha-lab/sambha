@@ -1,133 +1,22 @@
-import React, { useState } from "react";
-import { FormCheckBox } from "../../../../../../../packages/ui/src/form/FormCheckbox";
+import { useState } from "react";
+import { type Task, TaskItem } from "../createEvent/TaskList";
 import { Plus } from "lucide-react";
-import { TaskDrawer } from "./TaskDrawer";
+import { TaskDrawer } from "../createEvent/TaskDrawer";
+import { Dispatch } from "react";
+import { SetStateAction } from "react";
+import { useEffect } from "react";
 
-export interface Task {
-  id: number;
-  title: string;
-  cost: string;
-  date: string;
-  completed: boolean;
-  assignees?: string[];
-  notes?: string;
-}
-
-export interface TaskItemProps {
-  task: Task;
-  onToggle: (id: number) => void;
-  onDelete?: (id: number) => void;
-  onTaskClick: (task: Task) => void;
-}
-
-export const TaskItem = ({
-  task,
-  onToggle,
-  onDelete,
-  onTaskClick,
-}: TaskItemProps) => {
-  return (
-    <div
-      className="flex items-center gap-4 p-4  hover:bg-gray-50 transition-colors cursor-pointer"
-      onClick={() => onTaskClick(task)}
-    >
-      <div onClick={(e) => e.stopPropagation()}>
-        <FormCheckBox
-          id={`task-${task.id}`}
-          checked={task.completed}
-          onChange={() => onToggle(task.id)}
-        />
-      </div>
-
-      <div className="flex-1">
-        <h3
-          className={`text-base font-medium ${task.completed ? "text-gray-500 line-through" : "text-gray-900"}`}
-        >
-          {task.title}
-        </h3>
-        <div className="flex items-center gap-4 mt-1">
-          <span
-            className={`text-sm font-semibold ${task.completed ? "text-gray-400" : "text-green-600"}`}
-          >
-            {task.cost}
-          </span>
-          <span className="text-sm text-gray-500">{task.date}</span>
-        </div>
-      </div>
-
-      {onDelete && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onDelete(task.id);
-          }}
-          className="text-red-500 hover:text-red-700 text-sm"
-        >
-          Remove
-        </button>
-      )}
-    </div>
-  );
-};
-
-export const TaskList = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: "Book the Perfect Venue",
-      cost: "£4,500",
-      date: "Thu, Feb 19",
-      completed: false,
-      assignees: ["John Doe", "Jane Smith"],
-      notes: "Need to finalize the venue booking by end of month",
-    },
-    {
-      id: 2,
-      title: "Arrange Delicious Catering for Your Guests",
-      cost: "£8,000",
-      date: "Sun, Feb 22",
-      completed: false,
-      assignees: ["Jane Smith"],
-      notes: "",
-    },
-    {
-      id: 3,
-      title: "Capture Every Moment with Photography & Videography",
-      cost: "£3,000",
-      date: "Sun, Feb 22",
-      completed: false,
-      assignees: ["Michael Brown", "Sarah Johnson"],
-      notes: "",
-    },
-    {
-      id: 4,
-      title: "Set the Mood with Entertainment (DJ/Band)",
-      cost: "£1,500",
-      date: "Sun, Feb 22",
-      completed: false,
-      assignees: [],
-      notes: "",
-    },
-    {
-      id: 5,
-      title: "Decorate the Venue with Beautiful Florals & Décor",
-      cost: "£2,000",
-      date: "Sun, Feb 22",
-      completed: false,
-      assignees: ["John Doe"],
-      notes: "",
-    },
-    {
-      id: 6,
-      title: "Find the Perfect Attire for the Bride and Groom",
-      cost: "£3,500",
-      date: "Sun, Feb 22",
-      completed: false,
-      assignees: [],
-      notes: "",
-    },
-  ]);
-
+export const TaskBreakDown = ({
+  tasks,
+  setTasks,
+  showTotalBudget,
+  showStatic,
+}: {
+  showTotalBudget: boolean;
+  showStatic: boolean;
+  tasks: Task[];
+  setTasks: Dispatch<SetStateAction<Task[]>>;
+}) => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTask, setNewTask] = useState({
     title: "",
@@ -138,7 +27,14 @@ export const TaskList = () => {
   // Drawer state
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
+  const [completed, setCompleted] = useState<number>();
+  const [pending, setPending] = useState<number>();
+  useEffect(() => {
+    const completed = tasks.filter((task) => task.completed === true);
+    const pending = tasks.filter((task) => task.completed !== true);
+    setCompleted(completed.length);
+    setPending(pending.length);
+  }, [tasks]);
   const handleToggleTask = (id: number) => {
     setTasks(
       tasks.map((task) =>
@@ -247,19 +143,48 @@ export const TaskList = () => {
 
   return (
     <>
-      <div className="pt-12">
-        <div className="space-y-2 mb-8">
-          <p className="text-xl sm:text-2xl font-semibold text-primary-darkPurple">
-            Task list
-          </p>
-          <p className="text-gray-base">
-            Here's what you might need to do before your event - including
-            budgets.
-          </p>
-        </div>
+      <div className="pt-6">
+        <div>
+          <div className="flex justify-between items-center  px-5">
+            <div>
+              <p className="text-lg font-normal text-[#070D17]">
+                {tasks.length}
+              </p>
+              <p className="text-sm font-normal text-[#070D17]">Total</p>
+            </div>
+            <div>
+              <p className="text-lg font-normal text-[#070D17]">{completed}</p>
+              <p className="text-sm font-normal text-[#070D17]">Completed</p>
+            </div>
+            <div>
+              <p className="text-lg font-normal text-[#070D17]">{pending}</p>
+              <p className="text-sm font-normal text-[#070D17]">Pending</p>
+            </div>
+          </div>
+          <div className="h-6 rounded-2xl bg-[#EBECEE] flex overflow-hidden">
+            {/* Completed bar */}
+            <div
+              className="h-full bg-gradient-to-r from-[#9B5BF1] to-[#6745E1] transition-all duration-300"
+              style={{
+                width: tasks.length
+                  ? `${(completed! / tasks.length) * 100}%`
+                  : "0%",
+              }}
+            ></div>
 
+            {/* Pending bar */}
+            <div
+              className="h-full bg-[#EBECEE] transition-all duration-300"
+              style={{
+                width: tasks.length
+                  ? `${(pending! / tasks.length) * 100}%`
+                  : "0%",
+              }}
+            ></div>
+          </div>
+        </div>
         <div className="space-y-3">
-          <div className="max-h-52 overflow-y-scroll thin-scrollbar">
+          <div className="">
             {tasks.map((task) => (
               <TaskItem
                 key={task.id}
@@ -360,7 +285,7 @@ export const TaskList = () => {
         </div>
 
         {/* Task Summary */}
-        {tasks.length > 0 && (
+        {showTotalBudget && tasks.length > 0 && (
           <div className="mt-8 p-4 bg-gray-50 rounded-lg">
             <div className="flex justify-between items-center text-sm">
               <span className="text-gray-600">
@@ -371,8 +296,8 @@ export const TaskList = () => {
                 Total Budget:{" "}
                 {tasks
                   .reduce((sum, task) => {
-                    const cost = task.cost.replace(/[£,]/g, "");
-                    return sum + (parseFloat(cost) || 0);
+                    const cost = task.cost?.replace(/[£,]/g, "");
+                    return sum + (parseFloat(cost!) || 0);
                   }, 0)
                   .toLocaleString("en-GB", {
                     style: "currency",
@@ -380,28 +305,22 @@ export const TaskList = () => {
                   })}
               </span>
             </div>
-
-            {/* Progress Bar */}
-            <div className="mt-2 w-full bg-gray-200 rounded-full h-2">
-              <div
-                className="bg-primary-dark h-2 rounded-full transition-all duration-300"
-                style={{
-                  width: `${(tasks.filter((t) => t.completed).length / tasks.length) * 100}%`,
-                }}
-              />
-            </div>
           </div>
         )}
       </div>
 
       {/* Task Drawer */}
-      <TaskDrawer
-        isOpen={isDrawerOpen}
-        onClose={handleCloseDrawer}
-        task={selectedTask}
-        onUpdateTask={handleUpdateTask}
-        onDeleteTask={handleDeleteTask}
-      />
+      {isDrawerOpen && (
+        <div className="fixed w-full h-screen sm:-right-6 z-50 sm:-top-10 inset-0 ">
+          <TaskDrawer
+            isOpen={isDrawerOpen}
+            onClose={handleCloseDrawer}
+            task={selectedTask}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+          />
+        </div>
+      )}
     </>
   );
 };
