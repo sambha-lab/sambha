@@ -1,99 +1,99 @@
 "use client";
-import React from "react";
+import React, { useRef } from "react";
+import { Chair, TableShape, TextItem } from "types";
 
-export interface Guest {
-  name: string;
-}
+// Local definitions instead of "types" import
+// export type TableShape = {
+//   id: number;
+//   className: string;
+//   name: string;
+//   x: number;
+//   y: number;
+//   seats: number;
+//   seatAssignments?: Record<number, string>; // Added to support seatAssignments
+// };
 
-export interface TableShape {
-  id: number;
-  className: string;
-  name: string;
-}
+// export type Chair = {
+//   id: number;
+//   tableId: number;
+//   guest: Guest | null;
+//   seatNumber?: number;
+//   position?: { x: number; y: number };
+//   guestName?: string | null;
+// };
+
+// export type Guest = {
+//   id: string;
+//   name: string;
+// };
+
+// export type TextItem = {
+//   id: number;
+//   text: string;
+//   x: number;
+//   y: number;
+// };
 
 interface TableVisualizationProps {
-  selectedTable?: TableShape; // Make it optional instead of null
-  seatCount: number;
-  assignedSeats: (Guest | null)[];
+  tables: TableShape[];
+  chairs: Chair[];
+  textItems: TextItem[];
+  selectedTable?: TableShape | null;
+  setSelectedTable: (table: TableShape | null) => void;
+  handleMouseMove: (event: React.MouseEvent<HTMLDivElement>) => void;
+  handleMouseUp: () => void;
+  dragState: {
+    isDragging: boolean;
+  };
+  renderTable: (table: TableShape) => React.ReactNode;
+  renderChair: (chair: Chair) => React.ReactNode;
+  renderTextItem: (text: TextItem) => React.ReactNode;
 }
 
-export const TableVisualization = ({
-  selectedTable,
-  seatCount,
-  assignedSeats,
-}: TableVisualizationProps) => (
-  <div className="flex-1 bg-white-base rounded-r-2xl flex items-center justify-center relative">
-    {/* Grid Background */}
-    <div
-      className="absolute w-[600px] h-[500px] mx-auto bg-primary-light" // Set your desired width/height
-      style={{
-        backgroundImage: `
-        linear-gradient(to right, #98A2B3 1px, transparent 1px),
-        linear-gradient(to bottom, #98A2B3 1px, transparent 1px)
-      `,
-        backgroundSize: "40px 40px",
-        backgroundPosition: "center center",
-        zIndex: 0,
-        opacity: 0.8,
-      }}
-    ></div>
+export default function TableVisualization({
+  tables,
+  chairs,
+  textItems,
+  setSelectedTable,
+  handleMouseMove,
+  handleMouseUp,
+  dragState,
+  renderTable,
+  renderChair,
+  renderTextItem,
+}: TableVisualizationProps) {
+  const canvasRef = useRef<HTMLDivElement>(null);
 
-    {selectedTable ? (
-      <div className="relative z-10">
-        {/* Added z-10 to ensure content appears above grid */}
-        <div
-          className={`${selectedTable.className} flex items-center justify-center text-white font-medium text-primary-light text-sm`}
-        >
-          Table {selectedTable.id + 1}
-        </div>
-
-        <div className="absolute inset-0">
-          {Array.from({ length: seatCount }).map((_, index) => {
-            const angle = index * (360 / seatCount) - 90;
-            const radius = 100;
-            const x = Math.cos((angle * Math.PI) / 180) * radius;
-            const y = Math.sin((angle * Math.PI) / 180) * radius;
-
-            return (
-              <div
-                key={index}
-                className="absolute flex flex-col items-center justify-center"
-                style={{
-                  left: `calc(50% + ${x}px)`,
-                  top: `calc(50% + ${y}px)`,
-                  transform: "translate(-50%, -50%)",
-                }}
-              >
-                <div className="relative">
-                  {/* Seat number (hidden when assigned) */}
-                  {!assignedSeats[index] && (
-                    <div className="rounded-full hover:scale-105 cursor-pointer text-center flex items-center justify-center bg-purple-base text-primary-light font-medium w-8 h-8">
-                      {index + 1}
-                    </div>
-                  )}
-
-                  {/* Passenger name (shown when assigned) */}
-                  {assignedSeats[index] && (
-                    <div className="relative flex flex-col h-full justify-center items-center hover:scale-105 cursor-pointer">
-                      {/* Circular background */}
-                      <div className="w-8 h-8 rounded-full bg-purple-base"></div>
-
-                      {/* Rotated text - centered version */}
-                      <div className="absolute inset-0 flex justify-center items-center">
-                        <div className="transform -rotate-45 origin-center text-sm font-medium text-primary-darkPurple capitalize whitespace-nowrap">
-                          {assignedSeats[index].name}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+  return (
+    <div className="flex-1 relative overflow-hidden bg-gray-50">
+      <div
+        ref={canvasRef}
+        className="w-full h-full relative"
+        style={{
+          backgroundImage:
+            "radial-gradient(circle, #d1d5db 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+          cursor: dragState?.isDragging ? "grabbing" : "default",
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onClick={() => setSelectedTable(null)}
+      >
+        {tables.length === 0 &&
+          textItems.length === 0 &&
+          chairs.length === 0 && (
+            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 text-sm -translate-y-1/2 text-center text-gray-400">
+              <div className="text-4xl mb-4">🪑</div>
+              <h3 className=" font-medium mb-2">
+                Start designing your seating chart
+              </h3>
+              <p>Add tables and items from the left panel</p>
+            </div>
+          )}
+        {tables.map(renderTable)}
+        {chairs.map(renderChair)}
+        {textItems.map(renderTextItem)}
       </div>
-    ) : (
-      <p className="text-gray-500 z-10">Click a table item to display here</p>
-    )}
-  </div>
-);
+    </div>
+  );
+}

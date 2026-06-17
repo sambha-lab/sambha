@@ -41,7 +41,7 @@ export const Profile = () => {
           Profile Settings
         </Button>
       </div>
-      <HostedTable loading={false} data={hostedEvents}/>
+      <HostedTable loading={false} data={hostedEvents} />
     </div>
   );
 };

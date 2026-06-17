@@ -23,7 +23,7 @@ export const CreateGroup = () => {
   const setGroups = useSetAtom(groupsAtom);
 
   const [searchTerm, setSearchTerm] = useState("");
-  const [groupName, setGroupName] = useState<string>("");
+  // const [groupName, setGroupName] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
   const [step, setStep] = useState<1 | 2>(1);
   const [groupImage, setGroupImage] = useState<File | null>(null);

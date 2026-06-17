@@ -4,7 +4,6 @@ type EventTabsProps = {
   tabs: string[];
   activeTab?: string;
   onTabChange: (tab: string) => void;
-
 };
 
 export default function EventTabs({
@@ -18,10 +17,11 @@ export default function EventTabs({
         <button
           key={tab}
           onClick={() => onTabChange(tab)}
-          className={`pb-2 text-sm font-medium capitalize px-4 ${activeTab === tab
+          className={`pb-2 text-sm font-medium capitalize px-4 ${
+            activeTab === tab
               ? "border-b-2 border-primary-darkPurple text-primary-darkPurple"
               : "text-gray-base hover:text-primary-darkPurple"
-            }`}
+          }`}
         >
           {tab}
         </button>

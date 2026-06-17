@@ -3,35 +3,36 @@ import ElementIcon from "components/icons/ElementIcon";
 import TextIcon from "components/icons/TestIcon";
 import UserIcon from "components/icons/UserIcon";
 import React from "react";
+import { TabValue } from "types"; // or define locally
 
 interface TabNavigationProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
+  activeTab: TabValue;
+  setActiveTab: (tab: TabValue) => void;
 }
 
-const icons = [
-  { label: "Items", component: ElementIcon },
-  { label: "Text", component: TextIcon },
-  { label: "Guests", component: UserIcon },
-];
+const tabConfigs = [
+  { value: "Items", Icon: ElementIcon },
+  { value: "Text", Icon: TextIcon },
+  { value: "Guests", Icon: UserIcon },
+] as const;
 
 export const TabNavigation = ({
   activeTab,
   setActiveTab,
 }: TabNavigationProps) => (
   <div className="flex w-[254px] border-b items-center justify-between">
-    {icons.map(({ label, component: IconComponent }) => (
+    {tabConfigs.map(({ value, Icon }) => (
       <div
-        key={label}
-        onClick={() => setActiveTab(label)}
+        key={value}
+        onClick={() => setActiveTab(value)}
         className={`flex flex-col items-center py-2 ${
-          activeTab === label
+          activeTab === value
             ? "bg-primary-100 text-primary-600 border-b-2 px-4 border-primary-darkPurple"
             : "text-gray-600 px-4"
         }`}
       >
-        <IconComponent isActive={activeTab === label} />
-        <span className="text-xs cursor-pointer">{label}</span>
+        <Icon isActive={activeTab === value} />
+        <span className="text-xs cursor-pointer">{value}</span>
       </div>
     ))}
   </div>

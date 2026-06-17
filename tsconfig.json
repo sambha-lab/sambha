@@ -30,7 +30,7 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "apps/web/app/(dashboard)/event-planner/events/createEvent"
+    "apps/web/app/(dashboard)/planner/events/createEvent"
   ],
 
   "exclude": ["**/node_modules", "**/dist", "**/build", "**/.next"]

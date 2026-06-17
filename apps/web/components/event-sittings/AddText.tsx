@@ -33,7 +33,7 @@ export function FontSelector() {
 
 export default function AddText() {
   return (
-    <div className="pt-4">
+    <div className="pt-4 px-4">
       <div className="flex flex-col space-y-4">
         <button className="rounded-full border-primary-darkPurple gap-2 flex items-center justify-center font-medium text-darkPurple py-2 cursor-pointer w-full border">
           <TextIcon isActive={true} /> Add text box

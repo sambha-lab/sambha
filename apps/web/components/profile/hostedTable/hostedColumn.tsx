@@ -60,7 +60,7 @@ export const hostedColumns: ColumnDef<HostedType>[] = [
       return (
         <div className="flex items-center gap-4">
           <Link
-            href={`/event-planner/events/${slug}`}
+            href={`/planner/events/${slug}`}
             className="bg-gradientText bg-clip-text whitespace-nowrap text-transparent cursor-pointer text-primary-light"
             onClick={() => console.log(data)}
           >

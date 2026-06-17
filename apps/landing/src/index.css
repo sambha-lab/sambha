@@ -2,18 +2,22 @@
 
 @theme {
   --font-display: "Fractul", system-ui, sans-serif;
-  
+
   --color-primary-900: #020119;
   --color-glass-bg: rgb(255 255 255 / 0.05);
   --color-glass-border: rgb(255 255 255 / 0.2);
   --color-input-bg: rgb(255 255 255 / 0.07);
   --color-input-border: rgb(255 255 255 / 0.2);
   --color-text-muted: rgb(255 255 255 / 0.56);
-  --color-placeholder: #98A2B3;
-  
-  --gradient-text: linear-gradient(144deg, #ffffff 0%, rgba(255, 255, 255, 0) 100%);
-  
+  --color-placeholder: #98a2b3;
+
+  --gradient-text: linear-gradient(
+    144deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0) 100%
+  );
+
   --shadow-glass: 0 0 0 0.6px rgb(255 255 255 / 0.2);
   --backdrop-blur-glass: blur(14px);
   --backdrop-blur-input: blur(12px);
-} 
+}

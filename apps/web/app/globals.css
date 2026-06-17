@@ -10,6 +10,29 @@
   font-display: swap;
 }
 
+.dragging-active {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  opacity: 0.9;
+  transition: none !important;
+}
+
+.cursor-move {
+  cursor: move;
+  cursor: grab;
+}
+
+.cursor-move:active {
+  cursor: grabbing;
+}
+
+.scroll-hidden::-webkit-scrollbar {
+  display: none;
+}
+.scroll-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 @font-face {
   font-family: "Fractul";
   src: url("/fonts/Fractul-Regular.woff2") format("woff2");

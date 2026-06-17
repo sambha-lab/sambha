@@ -1,101 +1,67 @@
-import React, { useState } from "react";
-import { ViewButton } from "./Details";
+import React from "react";
 import { SearchFilter } from "./GuestSelector";
-
-// types.ts or at the top of your file
-type TableShape = {
-  id: number;
-  className: string;
-  name: string; // 👈 Add this line
-};
+import { ViewButton } from "app/[accessType]/events/[eventSlug]/Details";
 
 type TableItemsProps = {
-  onSelectTable: (table: TableShape) => void;
+  onSelectTable: (type: "round" | "rectangle" | "long") => void;
 };
 
 export default function TableItems({ onSelectTable }: TableItemsProps) {
-  const [selectedTable, setSelectedTable] = useState<string | null>(null);
-
   const tableTypes = [
     {
       name: "Long Table",
-      className: "w-20 h-10 bg-purple-base border-primary-black border-4 ",
+      type: "long" as const,
+      seats: {},
     },
     {
       name: "Round Table",
-      className:
-        "w-20 h-20 bg-purple-base border-primary-black border-4 rounded-full",
+      type: "round" as const,
+      seats: {},
     },
     {
-      name: "Large Table",
-      className: "w-32 h-28 bg-purple-base border-primary-black border-4",
-    },
-    {
-      name: "Seating row",
-      // className: "w-4 h-4 bg-purple-base rounded-full",
-      circleTables: Array.from({ length: 6 }, () => ({
-        className: "w-4 h-4 bg-purple-base rounded-full",
-      })),
+      name: "Square Table",
+      type: "rectangle" as const,
+      seats: {},
     },
   ];
 
-  const handleTableClick = (name: string) => {
-    const selected = name === selectedTable ? null : name;
-    setSelectedTable(selected);
-
-    // If selected is not null, call onSelectTable with the data
-    if (selected) {
-      const table = tableTypes.find((t) => t.name === selected);
-
-      if (table) {
-        onSelectTable({
-          id: tableTypes.indexOf(table),
-          // className: table.className,
-          className: table.className ?? "",
-          name: table.name,
-        });
-      }
-    }
-  };
-
   return (
-    <div className="flex flex-col w-full py-4 space-y-6">
-      {!selectedTable && (
-        <>
-          <div className="flex justify-between w-full">
-            <SearchFilter onSearch={(query) => console.log(query)} />
-          </div>
-          <div className="flex justify-between border-b py-4">
-            <h2 className="text-green-900 text-lg font-medium">Seating</h2>
-            <ViewButton />
-          </div>
+    <div className="flex flex-col w-full py-4 space-y-6 px-4">
+      <div className="flex justify-between w-full">
+        <SearchFilter onSearch={(query) => console.log(query)} />
+      </div>
 
-          {/* Shape selection */}
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 items-center py-4">
-            {tableTypes.map((table, index) => (
-              <div
-                key={index}
-                className="flex flex-col cursor-pointer"
-                onClick={() => handleTableClick(table.name)}
-              >
-                {/* Render either main shape OR looped circles */}
-                {!table.circleTables ? (
-                  // Single shape table
-                  <div className={table.className} />
-                ) : (
-                  // Seating row (looped circles)
-                  <div className="flex ">
-                    {table.circleTables.map((circle, idx) => (
-                      <div key={idx} className={circle.className} />
-                    ))}
-                  </div>
-                )}
-                <h6 className="text-gray-base text-sm mt-1">{table.name}</h6>
-              </div>
-            ))}
+      <div className="flex justify-between border-b py-4">
+        <h2 className="text-green-900 text-lg font-medium">Seating</h2>
+        <ViewButton />
+      </div>
+
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-2 items-center py-4">
+        {tableTypes.map((table, index) => (
+          <div
+            key={index}
+            className="flex flex-col cursor-pointer items-center gap-2 p-3 border border-gray-200 rounded-lg h-32 hover:border-indigo-300 hover:bg-indigo-50 transition-colors"
+            onClick={() => onSelectTable(table.type)}
+          >
+            <div
+              className={`flex items-center justify-center text-white font-medium text-sm border-[3px] border-primary-dark
+                    ${table.type === "round" ? "rounded-full" : "rounded-none"} 
+                    ${table.type === "long" ? "w-24 h-14" : "w-14 h-14"} 
+                    bg-purple-base`}
+            />
+            <h6 className="text-gray-base text-sm mt-1">{table.name}</h6>
           </div>
-        </>
-      )}
+        ))}
+      </div>
+
+      <div className="flex flex-col items-center gap-2 p-3 border border-gray-200 rounded-lg hover:border-indigo-300 hover:bg-indigo-50 transition-colors w-full">
+        <div className="flex gap-1">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="w-3 h-3 bg-purple-base rounded-full"></div>
+          ))}
+        </div>
+        <span className="text-xs text-gray-600">Seating row</span>
+      </div>
     </div>
   );
 }

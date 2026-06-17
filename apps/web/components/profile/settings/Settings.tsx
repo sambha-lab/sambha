@@ -30,7 +30,15 @@ export const Settings = () => {
         />
       </div>
       <div className="">
-        {activeTab === "Account & Preferences" && <AccountSettings />}
+        {activeTab === "Account & Preferences" && (
+          <AccountSettings
+            name="Bethany Stephens"
+            bio="This is a long bio about Bethany Stephens. Let us help you plan your events."
+            email="jaydeejevic@gmail.com"
+            nameLabel="Company name"
+            bioLabel="Description"
+          />
+        )}
         {activeTab === "Payment" && <Payment />}
       </div>
     </div>

@@ -49,7 +49,7 @@ export default function GuestSelector() {
     { id: 6, name: "Jacob Jones", isSeated: false },
   ];
   return (
-    <div className="flex space-y-4 flex-col w-full py-4 ">
+    <div className="flex space-y-4 flex-col w-full py-4 px-4">
       <SearchFilter onSearch={(query) => console.log(query)} />
 
       <div className="mt-10">

@@ -19,14 +19,14 @@ export const Breadcrumb = ({ eventSlug, currentEvent }: BreadcrumbProps) => (
       alt="Back"
     />
     <Link
-      href="/event-planner/events"
+      href="/planner/events"
       className="text-gray-base font-medium md:text-base text-xs"
     >
       Events
     </Link>
     <span>/</span>
     <Link
-      href={`/event-planner/events/${eventSlug}`}
+      href={`/planner/events/${eventSlug}`}
       className="text-gray-base font-medium md:text-base text-xs"
     >
       <span>{currentEvent?.name ?? "Event not found"}</span>
