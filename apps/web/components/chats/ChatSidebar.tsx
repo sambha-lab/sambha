@@ -85,10 +85,7 @@ export default function ChatSidebar() {
           const isActive = user?.id === activeChatUserId;
 
           return (
-            <Link
-              key={user?.id}
-              href={`/event-planner/chats/${user?.id ?? ""}`}
-            >
+            <Link key={user?.id} href={`/vendor/chats/${user?.id ?? ""}`}>
               <div
                 className={clsx(
                   "flex items-start gap-3 p-2 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50",

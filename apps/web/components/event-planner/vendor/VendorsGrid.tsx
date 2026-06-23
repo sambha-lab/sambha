@@ -22,7 +22,7 @@ export const VendorsGrid: React.FC<VendorsGridProps> = ({
       {vendors.map((vendor) => (
         <Link
           key={vendor.id}
-          href={`/event-planner/vendors/view/${vendor.id}`}
+          href={`/vendor/vendors/view/${vendor.id}`}
           className="flex flex-col group"
         >
           <div

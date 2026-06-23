@@ -5,10 +5,11 @@ import React, { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 import { isTypingAtom, messagesAtom } from "../../store/chatAtoms";
 import Image from "next/image";
-import {
-  userData,
-  users,
-} from "../../app/(dashboard)/event-planner/chats/data";
+import { userData, users } from "app/[accessType]/chats/data";
+// import {
+//   userData,
+//   users,
+// } from "../../app/(dashboard)/event-planner/chats/data";
 
 interface MessageListProps {
   userId: string; // ID of the user you're chatting with

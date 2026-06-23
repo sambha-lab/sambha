@@ -4,6 +4,7 @@ import { useState } from "react";
 import { AlertTriangle } from "lucide-react";
 import { Vendor } from "../../../../types/vendor";
 import { VendorProfile } from "../VendorProfile";
+import { Button } from "@sambha/ui/button";
 
 interface MakeOfferFormProps {
   vendor: Vendor;
@@ -151,18 +152,15 @@ export function MakeOfferForm({
             />
           </div>
 
-          <button
+          <Button
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className={`w-full py-[7px] px-4 rounded-full text-center font-medium transition-all duration-300 relative overflow-hidden border border-[#6946e2] bg-white group ${
+            className={`w-full border border-[#6946e2] text-white ${
               isSubmitting ? "opacity-75" : ""
             }`}
           >
-            <span className="relative z-10 bg-clip-text text-sm font-semibold text-transparent bg-gradient-to-b from-[#6946e2] to-[#b868fa] group-hover:from-white group-hover:to-white/90">
               {isSubmitting ? "Submitting..." : "Submit offer"}
-            </span>
-            <span className="absolute inset-0 bg-gradient-to-b from-[#b868fa] to-[#6946e2] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full"></span>
-          </button>
+          </Button>
 
           {error && (
             <div className="mt-4 text-red-600 text-sm flex items-center">

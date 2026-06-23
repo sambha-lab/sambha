@@ -76,7 +76,7 @@ export function OfferStatusView({
           </div>
 
           <Link
-            href={`/event-planner/vendors/view/${vendor.id}/make-offer`}
+            href={`/vendor/vendors/view/${vendor.id}/make-offer`}
             className="text-[#6946e2] font-medium hover:underline"
           >
             Edit offer

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { VendorsSkeleton } from "./VendorsSkeleton";
 import { LocationFilter } from "../LocationFilter";
 import { VendorsGrid } from "../VendorsGrid";
+import { Vendor } from "types/vendor";
 
 const categories = [
   { name: "Catering", icon: "🍽️" },
@@ -16,7 +17,7 @@ const categories = [
 ];
 
 type VendorsSectionProps = {
-  vendors: any[];
+  vendors: Vendor[];
   selectedLocation: string;
   onLocationChange: (location: string) => void;
   isLoading?: boolean;
@@ -53,7 +54,7 @@ export function VendorsSection({
           {categories.map((category) => (
             <Link
               key={category.name}
-              href={`/event-planner/vendors/categories/${category.name.toLowerCase()}`}
+              href={`/vendor/vendors/categories/${category.name.toLowerCase()}`}
               className="border border-[#c96fff] bg-[#f9f9f9] rounded-xl p-2 text-center hover:bg-[#f8e9ff] hover:shadow-md transition-all duration-200 flex flex-col items-center justify-center text-[#2a1d52] hover:text-[#c96fff] cursor-pointer text-xs"
             >
               <span className="text-2xl block mb-2">{category.icon}</span>

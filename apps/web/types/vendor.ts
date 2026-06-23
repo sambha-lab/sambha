@@ -3,8 +3,14 @@ export interface Vendor {
   name: string;
   icon: string;
   category: string;
+  locationLatitude?: number;
+  locationLongitude?: number;
 
-  location: string;
+  location: string; // Human-readable address
+  coordinates?: {
+    latitude: number;
+    longitude: number;
+  };
   verified: boolean;
   price: string;
   pricePerDay: number; // Added for calculations
@@ -24,19 +30,20 @@ export interface Vendor {
   minBookingDays: number; // Added
 }
 
+// Update your Review type to look like this:
 export interface Review {
+  userAvatar: string;
   id: string;
   userName: string;
-  userAvatar: string;
   content: string;
-  date: string;
-  rating: number;
-  likes: number;
   comment: string;
-  isLiked: boolean;
-  currentLikes: number;
+  date: string;
+  likes: number;
+  rating: number;
+  userImage: string;
+  isLiked?: boolean;
+  currentLikes?: number;
 }
-
 export interface Booking {
   id: string;
   eventName: string;
@@ -51,7 +58,6 @@ export interface Booking {
   paymentMethod?: string; // Added
   specialRequests?: string; // Added
 }
-
 export interface Milestone {
   id: string;
   name: string;
@@ -95,3 +101,5 @@ export interface Payment {
   method: string;
   bookingId: string;
 }
+
+

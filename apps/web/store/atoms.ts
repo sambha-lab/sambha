@@ -1,8 +1,6 @@
+import { allMessages, users } from "app/[accessType]/chats/data";
 import { atom } from "jotai";
-import {
-  allMessages,
-  users,
-} from "../app/(dashboard)/event-planner/chats/data";
+
 
 export interface Message {
   id: string;

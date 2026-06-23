@@ -1,12 +1,10 @@
 "use client";
+import clsx from "clsx";
 import { usePathname, useRouter } from "next/navigation";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Sidebar } from "../sidebar";
+// import { userData } from "../../../apps/web/app/(dashboard)/event-planner/chats/data";
 import { Settings, SettingsGradient } from "../icons";
-import Image from "next/image";
-import { userData } from "../../../../apps/web/app/(dashboard)/event-planner/chats/data";
-import { ChevronRight } from "lucide-react";
-import clsx from "clsx";
+import { Sidebar } from "../sidebar";
 
 type BaseSidebarItem = {
   icon: ReactNode;
@@ -47,11 +45,7 @@ const SidebarItem = ({ icon, label, active, onClick }: SidebarItemProps) => (
     ${active ? "bg-primary-light text-sidebar-primary" : "hover:bg-primary-light/10"}
   `}
   >
-    {/* <span className=" bg-card h-10 w-10 flex items-center justify-center">
-      {React.isValidElement(icon)
-        ? React.cloneElement(icon as React.ReactElement<any>, { active })
-        : icon}
-    </span> */}
+
 
     <span className="bg-card h-10 w-10 flex items-center justify-center">
       {React.isValidElement<IconProps>(icon)
@@ -70,22 +64,20 @@ const SidebarItem = ({ icon, label, active, onClick }: SidebarItemProps) => (
   </button>
 );
 
-const SambhaSidebar = ({ sidebarItems }: { sidebarItems: SidebarItem[] }) => {
+const SambhaSidebar = ({
+  sidebarItems,
+  role,
+}: {
+  sidebarItems: SidebarItem[];
+  role: string;
+}) => {
   const pathname = usePathname();
   const router = useRouter();
   const [activeItem, setActiveItem] = useState<SidebarItem | undefined>(() =>
     sidebarItems?.find((item) => item.url === pathname)
   );
 
-  const isSettingsActive = pathname.includes("/profile/settings");
-
-  // useEffect(() => {
-  //   if (pathname) {
-  //     setActiveItem(
-  //       sidebarItems?.find((item) => item.url && pathname.includes(item.url))
-  //     );
-  //   }
-  // }, [pathname]);
+  const isSettingsActive = pathname.includes(`${role}/settings`);
 
   useEffect(() => {
     if (pathname) {
@@ -95,7 +87,7 @@ const SambhaSidebar = ({ sidebarItems }: { sidebarItems: SidebarItem[] }) => {
         )
       );
     }
-  }, [pathname, sidebarItems]); // Added sidebarItems to dependencies
+  }, [pathname, sidebarItems]);
 
   return (
     <Sidebar className="!bg-primary-darkPurple  overflow-hidden block w-full lg:w-[20.625rem]">
@@ -118,7 +110,7 @@ const SambhaSidebar = ({ sidebarItems }: { sidebarItems: SidebarItem[] }) => {
               onClick={() => {
                 setActiveItem(item);
                 if ("url" in item && item.url) {
-                  router.push(item.url);
+                  router.push(`/${role}/${item.url}`);
                 }
               }}
             />
@@ -133,7 +125,7 @@ const SambhaSidebar = ({ sidebarItems }: { sidebarItems: SidebarItem[] }) => {
                 : "hover:bg-primary-light/10",
               "flex items-center p-3 rounded-full cursor-pointer w-full gap-4"
             )}
-            onClick={() => router.push("/profile/settings")}
+            onClick={() => router.push(`/${role}/settings`)}
           >
             {isSettingsActive ? <SettingsGradient /> : <Settings />}
 
@@ -149,9 +141,9 @@ const SambhaSidebar = ({ sidebarItems }: { sidebarItems: SidebarItem[] }) => {
           </div>
           <div
             className="flex items-center justify-between mt-6 cursor-pointer"
-            onClick={() => router.push("/profile")}
+            onClick={() => router.push(`${role}/profile`)}
           >
-            <div className="flex space-x-4 items-center text-white-base">
+            {/* <div className="flex space-x-4 items-center text-white-base">
               <Image
                 src={userData.image}
                 alt={userData.name}
@@ -163,8 +155,8 @@ const SambhaSidebar = ({ sidebarItems }: { sidebarItems: SidebarItem[] }) => {
                 <p className="font-bold text-white-base">{userData.name}</p>
                 <p className="text-sm text-white-base">{userData.email}</p>
               </div>
-            </div>
-            <ChevronRight className="text-white-base cursor-pointer" />
+            </div> */}
+            {/* <ChevronRight className="text-white-base cursor-pointer" /> */}
           </div>
         </div>
       </section>

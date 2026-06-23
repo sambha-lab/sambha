@@ -32,7 +32,7 @@
     ".next/types/**/*.ts",
     "../../packages/ui/src/**/*.ts",
     "../../packages/ui/src/**/*.tsx",
-    "app/(dashboard)/event-planner/events/createEvent"
+    "app/vendor/events/createEvent"
   ],
   "exclude": ["node_modules"]
 }

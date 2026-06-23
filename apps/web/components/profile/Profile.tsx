@@ -1,13 +1,14 @@
 "use client";
 
 import React from "react";
-import { userData } from "../../app/(dashboard)/event-planner/chats/data";
+// import { userData } from "../../app/(dashboard)/event-planner/chats/data";
 import Image from "next/image";
 import { PlaceHolder } from "@sambha/ui/icons";
 import { Button } from "@sambha/ui/button";
 import { useRouter } from "next/navigation";
 import { HostedTable } from "./hostedTable/HostedTable";
 import { hostedEvents } from "./data";
+import { userData } from "app/[accessType]/chats/data";
 
 export const Profile = () => {
   const router = useRouter();

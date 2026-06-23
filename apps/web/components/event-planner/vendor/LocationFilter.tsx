@@ -26,72 +26,34 @@ export function LocationFilter({
   const handleLocationChange = (location: string) => {
     onLocationChange(location);
     setIsOpen(false);
-    // Don't navigate, just update the state
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-      <p style={{ fontSize: "0.875rem", color: "#9CA3AF" }}>
-        Showing vendors in
-      </p>
-      <div style={{ position: "relative" }}>
+    <div className="flex items-center gap-2">
+      <p className="text-sm text-gray-base">Showing vendors in</p>
+      <div className="relative">
         <button
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "4px",
-            color: "#1F2937",
-            fontWeight: 500,
-            border: "none",
-            background: "transparent",
-            cursor: "pointer",
-            padding: 0,
-          }}
+          className="flex items-center gap-1 text-neutral-black font-medium cursor-pointer px-2 py-1 rounded transition-all duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-purple-10 focus:ring-opacity-50"
           onClick={() => setIsOpen(!isOpen)}
           aria-expanded={isOpen}
         >
           {selectedLocation}
           <ChevronDown
-            style={{
-              width: "16px",
-              height: "16px",
-              transition: "transform 150ms",
-              transform: isOpen ? "rotate(180deg)" : "rotate(0deg)",
-            }}
+            className={`w-4 h-4 transition-transform duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+              isOpen ? "rotate-180" : "rotate-0"
+            }`}
           />
         </button>
 
         {isOpen && (
-          <div
-            style={{
-              position: "absolute",
-              zIndex: 10,
-              marginTop: "4px",
-              width: "192px",
-              backgroundColor: "white",
-              borderRadius: "6px",
-              boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-              border: "1px solid #F3F4F6",
-            }}
-          >
-            <div style={{ padding: "4px 0" }}>
+          <div className="absolute z-10 mt-2 w-48 bg-white-base rounded-lg shadow-dropdown border border-gray-200 overflow-hidden animate-fadeIn hover:animate-fadeOut hover:bg-gray-50">
+            <div className="py-1">
               <button
-                style={{
-                  display: "block",
-                  width: "100%",
-                  textAlign: "left",
-                  padding: "8px 16px",
-                  fontSize: "0.875rem",
-                  backgroundColor:
-                    selectedLocation === "All" ? "#F5F0FF" : "transparent",
-                  color: selectedLocation === "All" ? "#2A1D52" : "#374151",
-                  border: "none",
-                  cursor: "pointer",
-                  transition: "background-color 100ms, color 100ms",
-                  ...(selectedLocation !== "All" && {
-                    ":hover": { backgroundColor: "#F9FAFB" },
-                  }),
-                }}
+                className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-100 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                  selectedLocation === "All"
+                    ? "bg-purple-10 text-primary-dark hover:bg-purple-10/90"
+                    : "text-neutral-black hover:bg-gray-100 focus:bg-gray-100"
+                }`}
                 onClick={() => handleLocationChange("All")}
               >
                 All Locations
@@ -99,23 +61,11 @@ export function LocationFilter({
               {locations.map((location) => (
                 <button
                   key={location}
-                  style={{
-                    display: "block",
-                    width: "100%",
-                    textAlign: "left",
-                    padding: "8px 16px",
-                    fontSize: "0.875rem",
-                    backgroundColor:
-                      selectedLocation === location ? "#F5F0FF" : "transparent",
-                    color:
-                      selectedLocation === location ? "#2A1D52" : "#374151",
-                    border: "none",
-                    cursor: "pointer",
-                    transition: "background-color 100ms, color 100ms",
-                    ...(selectedLocation !== location && {
-                      ":hover": { backgroundColor: "#F9FAFB" },
-                    }),
-                  }}
+                  className={`block w-full text-left px-4 py-2 text-sm transition-colors duration-100 ease-[cubic-bezier(0.4,0,0.2,1)] ${
+                    selectedLocation === location
+                      ? "bg-purple-10 text-primary-dark hover:bg-purple-10/90"
+                      : "text-neutral-black hover:bg-gray-100 focus:bg-gray-100"
+                  }`}
                   onClick={() => handleLocationChange(location)}
                 >
                   {location}

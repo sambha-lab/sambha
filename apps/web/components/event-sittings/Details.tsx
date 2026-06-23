@@ -170,7 +170,7 @@ export default function Details({ theme, onThemeClick }: DetailsProps) {
 
           <div className="pt-2">
             <Link
-              href={`/event-planner/events/${event.slug}/create-sitting-chart`}
+              href={`/e/events/${event.slug}/create-sitting-chart`}
             >
               <div className="w-full h-[107px] bg-gradient-primary rounded-2xl gap-4 flex text-primary-light items-center justify-start p-4">
                 <ChairIcon className="w-10 h-10" />

@@ -46,7 +46,7 @@ export function CategorySection({
     <div className="container mx-auto px-4 sm:px-6 py-8 bg-white">
       <Breadcrumbs
         items={[
-          { href: "/event-planner/vendors", label: "Vendors" },
+          { href: "/vendor/vendors", label: "Vendors" },
           { label: categoryName, isCurrent: true },
         ]}
       />
@@ -111,7 +111,7 @@ export function CategorySection({
                 </button>
               )}
               <Link
-                href="/event-planner/vendors"
+                href="//vendors"
                 className="px-6 py-3 text-sm font-medium rounded-lg border border-gray-300 text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200"
               >
                 Browse all categories

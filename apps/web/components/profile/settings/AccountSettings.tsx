@@ -1,10 +1,10 @@
 import React, { useRef, useState } from "react";
-import { userData } from "../../../app/(dashboard)/event-planner/chats/data";
 import Image from "next/image";
 import { IoCameraOutline } from "react-icons/io5";
 import { Input } from "@sambha/ui/input";
 import { PencilEdit } from "@sambha/ui/icons";
 import { Switch } from "@sambha/ui/switch";
+import { userData } from "app/[accessType]/chats/data";
 
 export const AccountSettings = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);

@@ -1,13 +1,13 @@
-import { Vendor } from "@/types/vendor";
 import Image from "next/image";
 import { CheckCircle } from "lucide-react";
+import { Vendor } from "types/vendor";
 
-export function VendorCard({ vendor }: { vendor: Vendor }) {
+export function VendorCard({ vendor }: { vendor: Vendor}) {
   return (
     <div className="border rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
       <div className="h-48 bg-gray-200 relative">
         <Image
-          src={vendor.images[0]}
+          src={vendor.images[0] ?? "/default-image.jpg"}
           alt={vendor.name}
           fill
           className="object-cover"

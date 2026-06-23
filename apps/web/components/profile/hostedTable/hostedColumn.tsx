@@ -18,9 +18,7 @@ export const hostedColumns: ColumnDef<HostedType>[] = [
     header: "Host",
     cell: ({ row }) => {
       return (
-        <p className="whitespace-nowrap font-semibold">
-          {row.original.host}
-        </p>
+        <p className="whitespace-nowrap font-semibold">{row.original.host}</p>
       );
     },
   },
@@ -42,15 +40,14 @@ export const hostedColumns: ColumnDef<HostedType>[] = [
     },
   },
   {
-  accessorKey: "todo",
-  header: "To-do",
+    accessorKey: "todo",
+    header: "To-do",
+  },
 
-},
-
- {
-  accessorKey: "venue",
-  header: "Venue",
-},
+  {
+    accessorKey: "venue",
+    header: "Venue",
+  },
   {
     id: "actions",
     header: "Actions",
@@ -60,7 +57,7 @@ export const hostedColumns: ColumnDef<HostedType>[] = [
       return (
         <div className="flex items-center gap-4">
           <Link
-            href={`/event-planner/events/${slug}`}
+            href={`vendor/events/${slug}`}
             className="bg-gradientText bg-clip-text whitespace-nowrap text-transparent cursor-pointer text-primary-light"
             onClick={() => console.log(data)}
           >
