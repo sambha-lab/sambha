@@ -17,10 +17,8 @@ import {
 
 import {
   AddBackgroundIcon,
-  BtcIcon,
   ChevronDown,
   ChevronLeft,
-  NigeriaIcon,
 } from "../../../../../public/svg";
 import Image from "next/image";
 import MapImage from "../../../../../public/map.png";
@@ -34,6 +32,9 @@ const eventTypes = [
   { label: "Workshop", value: "workshop" },
   { label: "Webinar", value: "webinar" },
   { label: "Meetup", value: "meetup" },
+  { label: "Wedding", value: "wedding" },
+  { label: "Birthday Party", value: "birthday" },
+  { label: "Corporate Event", value: "corporate" },
 ];
 
 const steps = [
@@ -43,20 +44,25 @@ const steps = [
   { title: "Step 4", subtitle: "Invite guests" },
 ];
 
-
-
 interface ValidationErrors {
   eventName?: string;
   eventType?: string;
   location?: string;
+  startDate?: string;
+  startTime?: string;
+  endDate?: string;
+  endTime?: string;
+  description?: string;
   budget?: string;
   expectedGuests?: string;
   inviteEmails?: string;
 }
+
 type CreateEventProps = {
   setIsCreated: Dispatch<SetStateAction<boolean>>;
   setIsModal: Dispatch<SetStateAction<boolean>>;
 };
+
 const CreateEvent: React.FC<CreateEventProps> = ({
   setIsCreated,
   setIsModal,
@@ -64,7 +70,7 @@ const CreateEvent: React.FC<CreateEventProps> = ({
   // Form state
   const [eventType, setEventType] = useState("");
   const [eventName, setEventName] = useState("");
-  const [isOneOffEvent, setIsOneOffEvent] = useState(false);
+  const [isOneOffEvent, setIsOneOffEvent] = useState(true);
   const [selectedCurrency, setSelectedCurrency] = useState("ngn");
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [selectedAsset, setSelectedAsset] = useState("btc");
@@ -74,6 +80,13 @@ const CreateEvent: React.FC<CreateEventProps> = ({
   const [coveredAsset, setCoveredAsset] = useState("");
   const [location, setLocation] = useState("");
   const [inviteEmails, setInviteEmails] = useState("");
+
+  // New date/time fields
+  const [startDate, setStartDate] = useState<string | undefined>("");
+  const [startTime, setStartTime] = useState("12:00");
+  const [endDate, setEndDate] = useState<string | undefined>("");
+  const [endTime, setEndTime] = useState("18:00");
+  const [description, setDescription] = useState("");
 
   // Loading and submission state
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -89,6 +102,20 @@ const CreateEvent: React.FC<CreateEventProps> = ({
   const nextStep = useSetAtom(handleNextStepAtom);
   const previousStep = useSetAtom(handlePreviousStepAtom);
 
+  // Set default dates
+  useEffect(() => {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (!startDate) {
+      setStartDate(tomorrow.toISOString().split("T")[0]);
+    }
+    if (!endDate) {
+      setEndDate(tomorrow.toISOString().split("T")[0]);
+    }
+  }, []);
+
   // Load saved form data on component mount
   useEffect(() => {
     const stored = localStorage.getItem("event-form");
@@ -96,12 +123,17 @@ const CreateEvent: React.FC<CreateEventProps> = ({
       const parsed = JSON.parse(stored);
       setEventName(parsed.title || "");
       setEventType(parsed.eventType || "");
-      setIsOneOffEvent(parsed.isOneOffEvent || false);
+      setIsOneOffEvent(parsed.isOneOffEvent ?? true);
       setLocation(parsed.location || "");
       setBudget(parsed.budget || "");
       setExpectedGuests(
         parsed.expectedGuests ? String(parsed.expectedGuests) : ""
       );
+      setStartDate(parsed.startDate || "");
+      setStartTime(parsed.startTime || "12:00");
+      setEndDate(parsed.endDate || "");
+      setEndTime(parsed.endTime || "18:00");
+      setDescription(parsed.description || "");
     }
   }, []);
 
@@ -116,8 +148,6 @@ const CreateEvent: React.FC<CreateEventProps> = ({
       newErrors.eventName = "Event name must be at least 3 characters";
     } else if (eventName.length > 50) {
       newErrors.eventName = "Event name must be less than 50 characters";
-    } else if (!/^[a-zA-Z0-9\s\-_.,!?]+$/.test(eventName)) {
-      newErrors.eventName = "Event name contains invalid characters";
     }
 
     // Event type validation
@@ -128,6 +158,37 @@ const CreateEvent: React.FC<CreateEventProps> = ({
     // Location validation
     if (!location.trim()) {
       newErrors.location = "Event location is required";
+    }
+
+    // Start date validation
+    if (!startDate) {
+      newErrors.startDate = "Start date is required";
+    } else {
+      const selectedDate = new Date(startDate);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (selectedDate < today) {
+        newErrors.startDate = "Start date cannot be in the past";
+      }
+    }
+
+    // Start time validation
+    if (!startTime) {
+      newErrors.startTime = "Start time is required";
+    }
+
+    // End date validation (only if not one-day event)
+    if (!isOneOffEvent) {
+      if (!endDate) {
+        newErrors.endDate = "End date is required";
+      } else if (startDate && endDate < startDate) {
+        newErrors.endDate = "End date cannot be before start date";
+      }
+
+      if (!endTime) {
+        newErrors.endTime = "End time is required";
+      }
     }
 
     setErrors(newErrors);
@@ -241,6 +302,32 @@ const CreateEvent: React.FC<CreateEventProps> = ({
     }
   };
 
+  // Format date for display
+  const formatDateForDisplay = (dateStr: string) => {
+    if (!dateStr) return "";
+    const date = new Date(dateStr);
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  // Format time for display
+  const formatTimeForDisplay = (timeStr: string) => {
+    if (!timeStr) return "";
+    const [hours, minutes] = timeStr.split(":");
+    const date = new Date();
+    if (hours && minutes) {
+      date.setHours(parseInt(hours), parseInt(minutes));
+      return date.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      });
+    }
+  };
+
   // Handle form submission
   const handleSubmit = async () => {
     if (!validateCurrentStep()) {
@@ -253,11 +340,16 @@ const CreateEvent: React.FC<CreateEventProps> = ({
       // Prepare final form data
       const finalEventData = {
         ...eventForm,
-        id: `event_${Date.now()}`, // Generate unique ID
+        id: `event_${Date.now()}`,
         title: eventName,
         eventType,
         location,
         isOneOffEvent,
+        startDate,
+        startTime,
+        endDate: isOneOffEvent ? startDate : endDate,
+        endTime: isOneOffEvent ? startTime : endTime,
+        description,
         budget: isFixedBudget ? "" : budget,
         expectedGuests: expectedGuests ? parseInt(expectedGuests) || 0 : 0,
         currency: selectedCurrency,
@@ -280,7 +372,6 @@ const CreateEvent: React.FC<CreateEventProps> = ({
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      // Here you would typically make an API call to save the event
       setIsModal(false);
       setIsCreated(true);
       console.log("Event created successfully:", finalEventData);
@@ -308,6 +399,11 @@ const CreateEvent: React.FC<CreateEventProps> = ({
       eventType,
       location,
       isOneOffEvent,
+      startDate,
+      startTime,
+      endDate,
+      endTime,
+      description,
       budget: isFixedBudget ? "" : budget,
       expectedGuests: expectedGuests ? parseInt(expectedGuests) || 0 : 0,
       currency: selectedCurrency,
@@ -348,8 +444,6 @@ const CreateEvent: React.FC<CreateEventProps> = ({
       newErrors.eventName = "Event name must be at least 3 characters";
     } else if (value.length > 50) {
       newErrors.eventName = "Event name must be less than 50 characters";
-    } else if (!/^[a-zA-Z0-9\s\-_.,!?]+$/.test(value)) {
-      newErrors.eventName = "Event name contains invalid characters";
     } else {
       delete newErrors.eventName;
     }
@@ -378,7 +472,7 @@ const CreateEvent: React.FC<CreateEventProps> = ({
             <div>
               <p className={`text-sm text-gray-base`}>{step.title}</p>
               <p
-                className={`  font-medium text-sm lg:text-base text-gray-600 ${stepper >= index + 1 ? "text-primary-darkPurple" : "text-gray-base"}`}
+                className={`font-medium text-sm lg:text-base text-gray-600 ${stepper >= index + 1 ? "text-primary-darkPurple" : "text-gray-base"}`}
               >
                 {step.subtitle}
               </p>
@@ -414,10 +508,10 @@ const CreateEvent: React.FC<CreateEventProps> = ({
               </>
             )}
 
-            <div className="bottom-0 absolute backdrop:blur-sm bg-black-100/30  left-0 right-0">
-              <label className="flex justify-center items-center gap-2 py-2 px-6 text-primary-light cursor-pointer text-center  w-full">
+            <div className="bottom-0 absolute backdrop:blur-sm bg-black-100/30 left-0 right-0">
+              <label className="flex justify-center items-center gap-2 py-2 px-6 text-primary-light cursor-pointer text-center w-full">
                 <AddBackgroundIcon />
-                <span className="text-center ">
+                <span className="text-center">
                   {coverImage ? "Edit Background" : "Add Background"}
                 </span>
                 <input
@@ -436,7 +530,7 @@ const CreateEvent: React.FC<CreateEventProps> = ({
               <div className="space-y-2">
                 <FormInput
                   id="eventName"
-                  placeholder="Enter event name"
+                  placeholder="Enter Event name"
                   value={eventName}
                   onChange={handleEventNameChange}
                 />
@@ -464,7 +558,11 @@ const CreateEvent: React.FC<CreateEventProps> = ({
                   style={{ backgroundImage: `url(${MapImage.src})` }}
                   className="p-6 border border-[#E4E7EC] rounded-lg bg-cover bg-center h-64 w-full relative"
                 >
-                  <LocationSearch onLocationSelect={handleLocationUpdate} />
+                  <LocationSearch
+                    onLocationSelect={handleLocationUpdate}
+                    placeholder="Enter Event location"
+                    initialValue={location}
+                  />
                 </div>
                 {errors.location && <FormError message={errors.location} />}
               </div>
@@ -479,6 +577,133 @@ const CreateEvent: React.FC<CreateEventProps> = ({
                   checked={isOneOffEvent}
                   onChange={() => setIsOneOffEvent((prev) => !prev)}
                 />
+              </div>
+
+              {/* Date and Time Section */}
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm font-medium text-gray-700 mb-2">
+                    Starts
+                  </p>
+                  <div className="flex gap-2">
+                    <div className="flex-1">
+                      <input
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => {
+                          setStartDate(e.target.value);
+                          if (errors.startDate) {
+                            setErrors((prev) => ({
+                              ...prev,
+                              startDate: undefined,
+                            }));
+                          }
+                        }}
+                        className="border border-gray-300 rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-main"
+                      />
+                      {errors.startDate && (
+                        <FormError message={errors.startDate} />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <input
+                        type="time"
+                        value={startTime}
+                        onChange={(e) => {
+                          setStartTime(e.target.value);
+                          if (errors.startTime) {
+                            setErrors((prev) => ({
+                              ...prev,
+                              startTime: undefined,
+                            }));
+                          }
+                        }}
+                        className="border border-gray-300 rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-main"
+                      />
+                      {errors.startTime && (
+                        <FormError message={errors.startTime} />
+                      )}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    {startDate && formatDateForDisplay(startDate)} at{" "}
+                    {startTime && formatTimeForDisplay(startTime)}
+                  </p>
+                </div>
+
+                {!isOneOffEvent && (
+                  <div>
+                    <p className="text-sm font-medium text-gray-700 mb-2">
+                      Ends
+                    </p>
+                    <div className="flex gap-2">
+                      <div className="flex-1">
+                        <input
+                          type="date"
+                          value={endDate}
+                          onChange={(e) => {
+                            setEndDate(e.target.value);
+                            if (errors.endDate) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                endDate: undefined,
+                              }));
+                            }
+                          }}
+                          className="border border-gray-300 rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-main"
+                        />
+                        {errors.endDate && (
+                          <FormError message={errors.endDate} />
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <input
+                          type="time"
+                          value={endTime}
+                          onChange={(e) => {
+                            setEndTime(e.target.value);
+                            if (errors.endTime) {
+                              setErrors((prev) => ({
+                                ...prev,
+                                endTime: undefined,
+                              }));
+                            }
+                          }}
+                          className="border border-gray-300 rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-main"
+                        />
+                        {errors.endTime && (
+                          <FormError message={errors.endTime} />
+                        )}
+                      </div>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {endDate && formatDateForDisplay(endDate)} at{" "}
+                      {endTime && formatTimeForDisplay(endTime)}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Event Description */}
+              <div className="space-y-2">
+                <textarea
+                  placeholder="Add event description"
+                  value={description}
+                  onChange={(e) => {
+                    setDescription(e.target.value);
+                    if (errors.description) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        description: undefined,
+                      }));
+                    }
+                  }}
+                  rows={4}
+                  className="border border-gray-300 rounded-lg px-4 py-3 w-full focus:outline-none focus:ring-2 focus:ring-primary-main resize-none"
+                />
+                {errors.description && (
+                  <FormError message={errors.description} />
+                )}
               </div>
             </form>
           </div>

@@ -60,12 +60,11 @@ function Page() {
     </div>
   );
 
+  const filteredEvents = dummyEvents.filter(
+    (event: FullEventsProps) =>
+      event.type.toLowerCase() === isActive.toLowerCase()
+  );
   const renderTabContent = () => {
-    const filteredEvents = dummyEvents.filter(
-      (event: FullEventsProps) =>
-        event.type.toLowerCase() === isActive.toLowerCase()
-    );
-
     if (filteredEvents.length === 0) return renderEmptyState(isActive);
 
     return (
@@ -105,38 +104,40 @@ function Page() {
       <div>{renderTabContent()}</div>
 
       {/* Quick Actions */}
-      <div className="flex gap-y-4 flex-col sm:absolute sm:bottom-20">
-        <p className="sm:text-xl text-lg text-gray-600 font-medium md:text-2xl">
-          Quick Actions
-        </p>
-        <div className="flex-col sm:flex-row flex gap-3">
-          <button
-            onClick={toggleModal}
-            className="rounded-2xl p-5 bg-gradient-primary space-y-4 max-w-64 text-left"
-          >
-            <Plus className="text-primary-light" size={22} />
-            <div>
-              <p className="font-semibold text-primary-light">Create event</p>
-              <p className="font-normal text-sm text-primary-light">
-                Tap to create a new event and do more.
-              </p>
-            </div>
-          </button>
+      {filteredEvents.length === 0 && (
+        <div className="flex gap-y-4 flex-col sm:absolute sm:bottom-20">
+          <p className="sm:text-xl text-lg text-gray-600 font-medium md:text-2xl">
+            Quick Actions
+          </p>
+          <div className="flex-col sm:flex-row flex gap-3">
+            <button
+              onClick={toggleModal}
+              className="rounded-2xl p-5 bg-gradient-primary space-y-4 max-w-64 text-left"
+            >
+              <Plus className="text-primary-light" size={22} />
+              <div>
+                <p className="font-semibold text-primary-light">Create event</p>
+                <p className="font-normal text-sm text-primary-light">
+                  Tap to create a new event and do more.
+                </p>
+              </div>
+            </button>
 
-          <Link
-            href="#"
-            className="rounded-2xl p-5 bg-white-900 max-w-64 space-y-4"
-          >
-            <StoreIcon />
-            <div>
-              <p className="font-semibold text-gray-500">Marketplace</p>
-              <p className="text-sm text-gray-600 font-normal">
-                Check through our marketplace for vendors for your event.
-              </p>
-            </div>
-          </Link>
+            <Link
+              href="#"
+              className="rounded-2xl p-5 bg-white-900 max-w-64 space-y-4"
+            >
+              <StoreIcon />
+              <div>
+                <p className="font-semibold text-gray-500">Marketplace</p>
+                <p className="text-sm text-gray-600 font-normal">
+                  Check through our marketplace for vendors for your event.
+                </p>
+              </div>
+            </Link>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Modal for Event Creation */}
       <GlobalModal
