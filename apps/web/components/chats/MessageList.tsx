@@ -3,19 +3,20 @@
 
 import React, { useEffect, useRef } from "react";
 import { useAtom } from "jotai";
-import { isTypingAtom, messagesAtom } from "../../store/chatAtoms";
+import { isTypingAtom, Message, messagesAtom } from "../../store/chatAtoms";
 import Image from "next/image";
-import {
-  userData,
-  users,
-} from "../../app/(dashboard)/event-planner/chats/data";
+import { userData, users } from "app/[accessType]/chats/data";
+// import {
+//   userData,
+//   users,
+// } from "../../app/(dashboard)/event-planner/chats/data";
 
 interface MessageListProps {
-  userId: string; // ID of the user you're chatting with
+  userId: string;
 }
 
 export default function MessageList({ userId }: MessageListProps) {
-  const [messages] = useAtom(messagesAtom);
+  const [messages] = useAtom<Message[]>(messagesAtom);
   const [isTypingMap] = useAtom(isTypingAtom);
   const bottomRef = useRef<HTMLDivElement | null>(null);
 

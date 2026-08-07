@@ -8,6 +8,7 @@ import { ChatProfile } from "./chats/ChatProfile";
 import { CreateGroup } from "./chats/CreateGroup";
 import { GroupLists } from "./chats/GroupLists";
 import { PaymentCard } from "./profile/settings/PaymentCard";
+import { WithdrawalCard } from "./profile/settings/WithdrawalCard";
 
 export const DisplayModal = () => {
   const [modal] = useAtom(modalAtom);
@@ -29,6 +30,10 @@ export const DisplayModal = () => {
       ) : type === "payment card" ? (
         <Modal title="Add Card">
           <PaymentCard />
+        </Modal>
+      ) : type === "withdrawal method" ? (
+        <Modal title="Add Withdrawal Method">
+          <WithdrawalCard />
         </Modal>
       ) : null}
     </div>

@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import { userData } from "../../app/(dashboard)/event-planner/chats/data";
 import Image from "next/image";
 import { PlaceHolder } from "@sambha/ui/icons";
 import { Button } from "@sambha/ui/button";
 import { useRouter } from "next/navigation";
 import { HostedTable } from "./hostedTable/HostedTable";
 import { hostedEvents } from "./data";
+import { userData } from "app/[accessType]/chats/data";
 
 export const Profile = () => {
   const router = useRouter();
@@ -36,12 +36,12 @@ export const Profile = () => {
         </div>
         <Button
           className="max-md:w-full"
-          onClick={() => router.push("/profile/settings")}
+          onClick={() => router.push("/planner/settings")}
         >
           Profile Settings
         </Button>
       </div>
-      <HostedTable loading={false} data={hostedEvents}/>
+      <HostedTable loading={false} data={hostedEvents} />
     </div>
   );
 };

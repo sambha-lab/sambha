@@ -11,6 +11,8 @@ import { useAtom } from "jotai";
 import { messagesAtom, usersAtom } from "../../store/chatAtoms";
 import { formatFlexibleDate } from "../../utils/formatMessageDate";
 import { ChatMenuDropdown } from "./ChatMenuDropdown";
+import { useEffect } from "react";
+import { allMessages, users } from "app/[accessType]/chats/data";
 
 const tabs: TabItem[] = [
   { key: "All", label: "All" },
@@ -20,8 +22,14 @@ const tabs: TabItem[] = [
 ];
 
 export default function ChatSidebar() {
-  const [messages] = useAtom(messagesAtom);
-  const [users] = useAtom(usersAtom);
+  const [messages, setMessages] = useAtom(messagesAtom);
+  const [usersData, setUsersData] = useAtom(usersAtom);
+
+  useEffect(() => {
+    setMessages(allMessages);
+    setUsersData(users);
+  }, [setMessages, setUsersData]);
+
   const [activeTab, setActiveTab] = useState<string>("All");
 
   const params = useParams();
@@ -46,7 +54,7 @@ export default function ChatSidebar() {
 
     return Object.entries(latest)
       .map(([userId, message]) => {
-        const user = users[userId as keyof typeof users];
+        const user = usersData[userId as keyof typeof usersData];
         const unreadCount = unreadCounts[userId] || 0;
 
         return {
@@ -65,7 +73,7 @@ export default function ChatSidebar() {
           new Date(b.message.timestamp).getTime() -
           new Date(a.message.timestamp).getTime()
       );
-  }, [activeTab, messages, users]);
+  }, [activeTab, messages, usersData]);
 
   return (
     <div className="p-4">
@@ -85,10 +93,7 @@ export default function ChatSidebar() {
           const isActive = user?.id === activeChatUserId;
 
           return (
-            <Link
-              key={user?.id}
-              href={`/event-planner/chats/${user?.id ?? ""}`}
-            >
+            <Link key={user?.id} href={`/planner/chats/${user?.id ?? ""}`}>
               <div
                 className={clsx(
                   "flex items-start gap-3 p-2 rounded-lg shadow-sm cursor-pointer hover:bg-gray-50",

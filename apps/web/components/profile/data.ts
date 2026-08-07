@@ -352,4 +352,56 @@ export const hostedEvents: HostedType[] = [
   },
 ];
 
+type VerifiedDocument = "id" | "license";
+export interface Location {
+  name: string;
+  address: string;
+}
+interface VendorUser {
+  name: string;
+  email: string;
+  venue: string;
+  locations: Location[];
+  about: string;
+  verifiedDate: string;
+  verifiedDocuments: VerifiedDocument[];
+  category: string;
+  openToNegotiation: boolean;
+  photo: string;
+  images: string[];
+}
 
+export const vendorUser: VendorUser = {
+  name: "Elegant Halls Services",
+  email: "jaydeejevic@gmail.com",
+  venue: "Grand Maple Theatre",
+  photo: "https://randomuser.me/api/portraits/men/15.jpg",
+  locations: [
+    {
+      name: "Grand Maple Theatre, New York City",
+      address: `123 Broadway Avenue
+New York, NY 10001
+United States`,
+    },
+    {
+      name: "Emerald Gardens, Los Angeles",
+      address: `456 Sunset Boulevard
+Los Angeles, CA 90028
+United States`,
+    },
+  ],
+  about:
+    "We specialize in creating unforgettable wedding receptions and corporate events with over 10 years of experience in the industry.",
+  verifiedDate: "2025-06-15T10:30:00.000Z",
+  verifiedDocuments: ["id", "license"],
+  category: "Catering",
+  openToNegotiation: true,
+  images: [
+    "https://images.unsplash.com/photo-1556742517-fde6c2abbe11?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D",
+    "https://images.unsplash.com/photo-1556742517-fde6c2abbe11?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D",
+    "https://images.unsplash.com/photo-1556742517-fde6c2abbe11?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D",
+    "https://images.unsplash.com/photo-1556742517-fde6c2abbe11?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D",
+    "https://images.unsplash.com/photo-1556742517-fde6c2abbe11?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D",
+    "https://images.unsplash.com/photo-1556742517-fde6c2abbe11?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDZ8fHxlbnwwfHx8fHw%3D",
+  ],
+};

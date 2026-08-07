@@ -1,8 +1,4 @@
 import { atom } from "jotai";
-import {
-  allMessages,
-  users,
-} from "../app/(dashboard)/event-planner/chats/data";
 import { Host, User } from "../types/events/data";
 
 export interface Message {
@@ -14,10 +10,10 @@ export interface Message {
   seen: boolean;
 }
 
-export const usersAtom = atom<Record<string, User>>(users);
+export const usersAtom = atom<Record<string, User>>({});
 
 export const groupsAtom = atom<Host[]>([]);
 
-export const messagesAtom = atom(allMessages);
+export const messagesAtom = atom<Message[]>([]);
 
 export const isTypingAtom = atom<Record<string, boolean>>({});

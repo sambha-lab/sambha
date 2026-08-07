@@ -4,9 +4,9 @@ import { IoCameraOutline } from "react-icons/io5";
 import { Input } from "@sambha/ui/input";
 import { PencilEdit } from "@sambha/ui/icons";
 import { Switch } from "@sambha/ui/switch";
-import { userData } from "app/[accessType]/chats/data";
+import { vendorUser } from "../data";
 
-export const AccountSettings = () => {
+export const VendorAccountSettings = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -36,8 +36,8 @@ export const AccountSettings = () => {
                 />
               ) : (
                 <Image
-                  src={userData.image}
-                  alt={userData.name}
+                  src={vendorUser.photo}
+                  alt={vendorUser.name}
                   width={40}
                   height={40}
                   className="w-full rounded-full"
@@ -64,11 +64,11 @@ export const AccountSettings = () => {
           <div className="space-y-4 md:ml-6 w-full">
             <div className="grid grid-cols-1 space-y-1">
               <label htmlFor="name" className="font-medium text-sm">
-                Company name
+                Business name
               </label>
               <Input
                 type="text"
-                defaultValue={userData.name}
+                defaultValue={vendorUser.name}
                 id="name"
                 className="min-h-10 rounded-lg"
               />
@@ -79,8 +79,8 @@ export const AccountSettings = () => {
               </label>
               <textarea
                 id="description"
-                defaultValue={userData.description}
-                className="resize-none min-h-12 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
+                defaultValue={vendorUser.about}
+                className="resize-none min-h-28 border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-1 focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]"
               />
             </div>
           </div>
@@ -91,7 +91,7 @@ export const AccountSettings = () => {
           </label>
           <Input
             type="email"
-            defaultValue={userData.email}
+            defaultValue={vendorUser.email}
             className="rounded-lg min-h-10 text-grey-base"
           />
           <div className="absolute top-1/2 right-4">
