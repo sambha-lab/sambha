@@ -38,6 +38,8 @@ import { slugify } from "hooks/Slugify";
 import Guest from "./guest";
 import BudgetBreakDown from "./budget";
 import { dummyEvents, FullEventsProps } from "types/events/dummyEvents";
+import { Task, TaskList } from "../createEvent/TaskList";
+import { TaskBreakDown } from "./Task";
 
 type ThemeConfig = {
   name: string;
@@ -358,6 +360,21 @@ function Page() {
   const [openTheme, setOpenTheme] = useState(false);
   const [selectedTheme, setSelectedTheme] = useState<ThemeConfig>(defaultTheme);
   const [banner, setBanner] = useState<string | null>(null);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    if (event?.tasks) {
+      setTasks(
+        event.tasks.map((task) => ({
+          id: task.id,
+          title: task.title,
+          cost: task.cost.toString(),
+          date: task.dueDate,
+          completed: false,
+        }))
+      );
+    }
+  }, [event]);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -662,8 +679,20 @@ function Page() {
           </div>
         );
 
-      case "Tasks":
-        return <div>Tasks Tab Coming Soon</div>;
+      case "Tasks": {
+        return (
+          <>
+            {tasks && (
+              <TaskBreakDown
+                showTotalBudget={false}
+                showStatic
+                tasks={tasks}
+                setTasks={setTasks}
+              />
+            )}
+          </>
+        );
+      }
 
       case "Budget":
         return <div>{event && <BudgetBreakDown event={event} />}</div>;
@@ -673,7 +702,9 @@ function Page() {
     }
   };
   return (
-    <div className="font-fractul min-h-screen relative">
+    <div
+      className={`font-fractul min-h-screen ${activeTab.toLowerCase() === "task" ? "" : "relative"}`}
+    >
       {/* Fixed Background with Theme Image */}
       <div
         className="antialiased fixed inset-0 -z-20 transition-all duration-700 ease-in-out"
@@ -692,26 +723,29 @@ function Page() {
       {/* Main Content Container */}
       <div className={`relative min-h-screen transition-all duration-500`}>
         <div
-          className={`p-4 md:p-6 ${selectedTheme.styles.contentBg} ${selectedTheme.styles.shadowStyle} rounded-2xl m-4 transition-all duration-500`}
+          className={`p-4 md:p-6 ${selectedTheme.styles.contentBg}  transition-all duration-500`}
         >
           {/* Navigation */}
           <nav
             className={`flex gap-2 ${selectedTheme.styles.secondaryText} text-lg md:text-xl items-center my-6`}
           >
-            <button className="flex items-center" onClick={handleNavigateBack}>
+            <button
+              className="flex items-center text-base font-medium"
+              onClick={handleNavigateBack}
+            >
               <Image
                 src={back}
                 alt="back-arrow"
                 width={20}
                 height={20}
-                className="transition-all duration-300 hover:scale-110"
+                className="transition-all duration-300 scale-90"
               />
-              <span className="cursor-pointer hover:underline transition-all">
+              <span className="cursor-pointer hover:underline transition-all pl-2">
                 Events /{" "}
               </span>
             </button>
             <span
-              className={`${selectedTheme.styles.primaryText} font-semibold text-lg md:text-2xl`}
+              className={`${selectedTheme.styles.primaryText} font-medium text-base`}
             >
               {event && event.name}
             </span>
@@ -719,13 +753,13 @@ function Page() {
 
           {/* Tabs */}
           <ul
-            className={`flex text-lg md:text-xl ${selectedTheme.styles.secondaryText} gap-4 my-6 pb-4 border-b-2 ${selectedTheme.styles.borderColor}`}
+            className={`flex text-lg md:text-xl ${selectedTheme.styles.secondaryText} gap-4 mb-8 border-b-2 ${selectedTheme.styles.borderColor}`}
           >
             {tabs.map((tab) => (
               <li
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`cursor-pointer pb-1 border-b-4 transition-all duration-300 hover:scale-105 ${
+                className={`cursor-pointer pb-1 border-b transition-all duration-300 hover:scale-105 text-sm font-medium ${
                   activeTab === tab
                     ? `${selectedTheme.styles.primaryText} border-current`
                     : `${selectedTheme.styles.secondaryText} border-transparent hover:${selectedTheme.styles.primaryText}`
